@@ -1,4 +1,4 @@
-#Coverly ✍️🤖
+##Coverly ✍️🤖
 
 Instantly create **professional cover letters** by uploading your resume and a job description — powered by **AI (GPT-3.5)**!
 

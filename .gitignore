@@ -10,5 +10,5 @@ backend/__pycache__/
 .vscode/
 
 # Environment variables
-.env
+*.env
 

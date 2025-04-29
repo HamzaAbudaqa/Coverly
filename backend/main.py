@@ -15,7 +15,7 @@ app.add_middleware(
 )
 
 # Setup your OpenAI API key
-OPENAI_API_KEY = "hello"
+OPENAI_API_KEY = "Hi"
 
 @app.post("/generate-cover-letter")
 async def generate_cover_letter(resume: UploadFile, job_description: str = Form(...)):

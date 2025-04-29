@@ -1,0 +1,326 @@
+body {
+  margin: 0;
+  font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #1e0e3e, #3e1a74, #6b31c1);
+  background-size: 200% 200%;
+  animation: gradientShift 12s ease infinite;
+  color: #eaeaea;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+
+.container {
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(20px);
+  border-radius: 20px;
+  padding: 2rem 3rem;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+  max-width: 800px;
+  width: 100%;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+h1 {
+  font-size: 2.2rem;
+  text-align: center;
+  margin-bottom: 1.5rem;
+  background: linear-gradient(90deg, #ffffff, #ad6df7);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 1px 1px 6px rgba(0, 0, 0, 0.3);
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+input[type="file"],
+textarea {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #e0e0e0;
+  padding: 1rem;
+  border-radius: 12px;
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+}
+
+input[type="file"]:hover,
+textarea:hover {
+  border-color: #8e2de2;
+}
+
+textarea::placeholder {
+  color: #999;
+}
+
+button {
+  padding: 1rem;
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: white;
+  background: linear-gradient(135deg, #8e2de2, #4a00e0);
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+button:hover {
+  transform: scale(1.03);
+  box-shadow: 0 0 20px rgba(142, 45, 226, 0.5);
+}
+
+.generated-letter {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 1.5rem 2rem;
+  border-radius: 16px;
+  box-shadow: 0 0 25px rgba(0, 0, 0, 0.2);
+  max-width: 550px;         /* Smaller box */
+  width: 100%;
+  color: #e6e6e6;
+  font-size: 0.82rem;        /* Smaller font */
+  line-height: 1.4;
+  white-space: pre-wrap;
+  overflow-x: hidden;
+}
+@media (max-width: 768px) {
+  .generated-letter {
+    padding: 1rem;
+    font-size: 0.78rem;
+    max-width: 90vw;
+  }
+}
+
+input[type="file"]::file-selector-button {
+  background: #4f28a5;
+  border: none;
+  padding: 0.6rem 1rem;
+  color: white;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-right: 1rem;
+  transition: background 0.3s ease;
+}
+
+input[type="file"]::file-selector-button:hover {
+  background: #6b40e9;
+}
+
+.spinner {
+  margin-top: 1rem;
+  border: 6px solid rgba(255, 255, 255, 0.2);
+  border-top: 6px solid #a75aff;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 0.9s linear infinite;
+  align-self: center;
+  justify-self: center;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.full-layout {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+}
+
+.sidebar {
+  width: 260px;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 1.5rem;
+  box-shadow: inset -1px 0 4px rgba(0, 0, 0, 0.3);
+  margin-top: 6rem;
+  color: #fff;
+  overflow-y: auto;
+  margin-left: 1rem;
+}
+
+.sidebar h2 {
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+}
+
+.sidebar li {
+  background: rgba(255, 255, 255, 0.07);
+  padding: 0.6rem 1rem;
+  margin-bottom: 0.6rem;
+  border-radius: 8px;
+  color: #ccc;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.sidebar li:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+}
+
+.sidebar li.active {
+  background: #a75aff;
+  color: #fff;
+  font-weight: bold;
+}
+
+.main-content {
+  flex: 1;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 8rem 2rem 6rem 2rem; /* Add bottom padding */
+  position: relative;
+}
+
+
+.floating-generate-button {
+  position: fixed;
+  bottom: 3rem;
+  right: 3rem;
+  padding: 1rem 1.8rem;
+  font-size: 1rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(to right, #a75aff, #7a34e0);
+  color: white;
+  cursor: pointer;
+  z-index: 999;
+  box-shadow: 0 0 12px rgba(167, 90, 255, 0.4);
+  transition: transform 0.2s ease;
+}
+
+.floating-generate-button:hover {
+  transform: scale(1.05);
+}
+.regenerate-container {
+  position: fixed;
+  bottom: 20px;
+  right: 40px;
+  z-index: 1000;
+}
+
+
+.regenerate-container button {
+  background: linear-gradient(to right, #9d4edd, #7b2cbf);
+  color: white;
+  font-weight: 600;
+  margin-right: -2.1rem;
+  border: none;
+  padding: 14px 26px;
+  font-size: 16px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.regenerate-container button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.loader {
+  border: 3px solid #fff;
+  border-top: 3px solid #9d4edd;
+  border-radius: 50%;
+  width: 16px;
+  height: 16px;
+  animation: spin 1s linear infinite;
+  display: inline-block;
+  margin-left: 10px;
+  vertical-align: middle;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+
+.actions-container {
+  display: flex;
+  gap: 1rem;
+  position: fixed;
+  bottom: 3rem;
+  left: 300px;
+  z-index: 999;
+}
+
+.pdf-button{
+  padding: 0.8rem 1.5rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  color: white;
+  background: linear-gradient(to right, #6c63ff, #8e2de2);
+  transition: transform 0.2s ease;
+  margin-left: 40rem;
+  margin-bottom: 1.5rem;
+}
+
+.restart-button {
+  padding: 0.8rem 2.9rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  color: white;
+  background: linear-gradient(to right, #6c63ff, #8e2de2);
+  transition: transform 0.2s ease;
+  background: linear-gradient(to right, #ff4d4d, #ff6f61);
+  margin-left: 40rem;
+  margin-bottom: 1.5rem;
+}
+
+#cv
+.restart-button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 12px rgba(142, 45, 226, 0.4);
+}
+.pdf-button:hover{
+  transform: scale(1.05);
+  box-shadow: 0 0 12px rgba(142, 45, 226, 0.4);
+}
+.page-footer {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  font-size: 0.85rem;
+  font-weight: bold;
+  color: rgba(255, 255, 255, 0.5);
+  z-index: 999;
+  pointer-events: none;
+  
+}
+
+

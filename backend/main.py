@@ -2,6 +2,7 @@ from fastapi import FastAPI, UploadFile, Form
 from fastapi.middleware.cors import CORSMiddleware
 from pdfminer.high_level import extract_text
 import openai
+import os
 
 app = FastAPI()
 
@@ -15,7 +16,7 @@ app.add_middleware(
 )
 
 # Setup your OpenAI API key
-OPENAI_API_KEY = "Hi"
+OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
 
 @app.post("/generate-cover-letter")
 async def generate_cover_letter(resume: UploadFile, job_description: str = Form(...)):

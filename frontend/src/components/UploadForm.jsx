@@ -20,7 +20,8 @@ function UploadForm({ onLetterGenerated }) {
     setLoading(true); // start loading
 
     try {
-      const response = await axios.post("http://localhost:8000/generate-cover-letter", formData, {
+      const response = await axios.post("https://coverly-production.up.railway.app/generate-cover-letter", formData, {
+
         headers: { "Content-Type": "multipart/form-data" },
       });
       onLetterGenerated(response.data.cover_letter, resumeFile, jobDescription);

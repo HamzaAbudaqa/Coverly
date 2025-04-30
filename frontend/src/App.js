@@ -41,10 +41,10 @@ function App() {
     const formData = new FormData();
     formData.append("resume", lastResume);
     formData.append("job_description", lastJobDescription);
-
     try {
+
       const response = await axios.post(
-        "http://localhost:8000/generate-cover-letter",
+        "https://coverly-production.up.railway.app/generate-cover-letter",
         formData,
         {
           headers: {
@@ -52,6 +52,7 @@ function App() {
           },
         }
       );
+      
 
       if (response.data && response.data.cover_letter) {
         setGeneratedLetters((prev) => [response.data.cover_letter, ...prev]);

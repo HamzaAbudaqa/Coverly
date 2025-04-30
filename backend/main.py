@@ -6,13 +6,12 @@ import os
 from dotenv import load_dotenv
 load_dotenv()
 
-
 app = FastAPI()
 
 # Allow frontend connection
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
+    allow_origins=["http://coverly-seven.vercel.app/"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -39,7 +38,7 @@ Requirements:
 - About 250-300 words
 - Mention specific skills that match the job
 - The cover letter must relate the skills used in the resume experience to what is looked for in the job description.
-- It must be professional but not sound Ai generated.
+- It must be professional but not sound Ai generated, do not use words like keen.
 - If the resume does not have the qualifications, then don't create fake experience, only use whats on the resume.
 - Formal tone but confident.
 """

@@ -25,11 +25,3 @@ This project uses:
 | React + Axios | FastAPI (Python) | OpenAI GPT-3.5 | pdfminer.six |
 
 ---
-
-## ⚙️ How to Run Locally
-
-### 1. Clone the Repository
-```bash
-git clone https://github.com/YOUR-USERNAME/ai-cover-letter-generator.git
-cd ai-cover-letter-generator
-

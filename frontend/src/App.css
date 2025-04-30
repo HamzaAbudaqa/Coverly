@@ -11,6 +11,7 @@ body {
   justify-content: center;
   padding: 2rem;
 }
+
 @keyframes gradientShift {
   0% {
     background-position: 0% 50%;
@@ -22,7 +23,6 @@ body {
     background-position: 0% 50%;
   }
 }
-
 
 .container {
   background: rgba(255, 255, 255, 0.04);
@@ -93,20 +93,13 @@ button:hover {
   padding: 1.5rem 2rem;
   border-radius: 16px;
   box-shadow: 0 0 25px rgba(0, 0, 0, 0.2);
-  max-width: 550px;         /* Smaller box */
+  max-width: 550px;
   width: 100%;
   color: #e6e6e6;
-  font-size: 0.82rem;        /* Smaller font */
+  font-size: 0.82rem;
   line-height: 1.4;
   white-space: pre-wrap;
   overflow-x: hidden;
-}
-@media (max-width: 768px) {
-  .generated-letter {
-    padding: 1rem;
-    font-size: 0.78rem;
-    max-width: 90vw;
-  }
 }
 
 input[type="file"]::file-selector-button {
@@ -197,74 +190,9 @@ input[type="file"]::file-selector-button:hover {
   display: flex;
   align-items: flex-start;
   justify-content: center;
-  padding: 8rem 2rem 6rem 2rem; /* Add bottom padding */
+  padding: 8rem 2rem 6rem 2rem;
   position: relative;
 }
-
-
-.floating-generate-button {
-  position: fixed;
-  bottom: 3rem;
-  right: 3rem;
-  padding: 1rem 1.8rem;
-  font-size: 1rem;
-  font-weight: bold;
-  border: none;
-  border-radius: 12px;
-  background: linear-gradient(to right, #a75aff, #7a34e0);
-  color: white;
-  cursor: pointer;
-  z-index: 999;
-  box-shadow: 0 0 12px rgba(167, 90, 255, 0.4);
-  transition: transform 0.2s ease;
-}
-
-.floating-generate-button:hover {
-  transform: scale(1.05);
-}
-.regenerate-container {
-  position: fixed;
-  bottom: 20px;
-  right: 40px;
-  z-index: 1000;
-}
-
-
-.regenerate-container button {
-  background: linear-gradient(to right, #9d4edd, #7b2cbf);
-  color: white;
-  font-weight: 600;
-  margin-right: -2.1rem;
-  border: none;
-  padding: 14px 26px;
-  font-size: 16px;
-  border-radius: 12px;
-  cursor: pointer;
-  transition: background 0.3s ease;
-}
-
-.regenerate-container button:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-.loader {
-  border: 3px solid #fff;
-  border-top: 3px solid #9d4edd;
-  border-radius: 50%;
-  width: 16px;
-  height: 16px;
-  animation: spin 1s linear infinite;
-  display: inline-block;
-  margin-left: 10px;
-  vertical-align: middle;
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
 
 .actions-container {
   display: flex;
@@ -275,7 +203,8 @@ input[type="file"]::file-selector-button:hover {
   z-index: 999;
 }
 
-.pdf-button{
+.pdf-button,
+.restart-button {
   padding: 0.8rem 1.5rem;
   font-weight: bold;
   border: none;
@@ -284,33 +213,21 @@ input[type="file"]::file-selector-button:hover {
   color: white;
   background: linear-gradient(to right, #6c63ff, #8e2de2);
   transition: transform 0.2s ease;
-  margin-left: 40rem;
-  margin-bottom: 1.5rem;
+  width: 100%;
+  max-width: 400px;
+  margin-left: 0;
 }
 
 .restart-button {
-  padding: 0.8rem 2.9rem;
-  font-weight: bold;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-  color: white;
-  background: linear-gradient(to right, #6c63ff, #8e2de2);
-  transition: transform 0.2s ease;
   background: linear-gradient(to right, #ff4d4d, #ff6f61);
-  margin-left: 40rem;
-  margin-bottom: 1.5rem;
 }
 
-#cv
+.pdf-button:hover,
 .restart-button:hover {
   transform: scale(1.05);
   box-shadow: 0 0 12px rgba(142, 45, 226, 0.4);
 }
-.pdf-button:hover{
-  transform: scale(1.05);
-  box-shadow: 0 0 12px rgba(142, 45, 226, 0.4);
-}
+
 .page-footer {
   position: fixed;
   bottom: 20px;
@@ -320,7 +237,52 @@ input[type="file"]::file-selector-button:hover {
   color: rgba(255, 255, 255, 0.5);
   z-index: 999;
   pointer-events: none;
-  
 }
 
+@media (max-width: 768px) {
+  .full-layout {
+    flex-direction: column;
+    height: auto;
+    overflow: auto;
+  }
 
+  .sidebar {
+    width: 100%;
+    margin: 0 0 1rem 0;
+    box-shadow: none;
+  }
+
+  .main-content {
+    padding: 1rem;
+    width: 100%;
+  }
+
+  .container {
+    padding: 1rem;
+  }
+
+  .generated-letter {
+    padding: 1rem;
+    font-size: 0.78rem;
+    max-width: 100%;
+  }
+
+  .button-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .top-buttons-row,
+  .bottom-button-row {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .pdf-button,
+  .restart-button {
+    width: 100%;
+    max-width: 100%;
+  }
+}

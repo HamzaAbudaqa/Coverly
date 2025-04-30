@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import UploadForm from "./components/UploadForm";
@@ -11,12 +10,25 @@ function App() {
   const [lastResume, setLastResume] = useState(null);
   const [lastJobDescription, setLastJobDescription] = useState("");
   const [loading, setLoading] = useState(false);
+  const [totalCount, setTotalCount] = useState(0); // <- NEW
 
   useEffect(() => {
     const saved = localStorage.getItem("coverLetterHistory");
     if (saved) {
       setGeneratedLetters(JSON.parse(saved));
     }
+
+    // Fetch total count
+    const fetchCount = async () => {
+      try {
+        const response = await axios.get("https://coverly-production.up.railway.app/count");
+        setTotalCount(response.data.count);
+      } catch (error) {
+        console.error("Failed to fetch count:", error);
+      }
+    };
+
+    fetchCount();
   }, []);
 
   useEffect(() => {
@@ -42,7 +54,6 @@ function App() {
     formData.append("resume", lastResume);
     formData.append("job_description", lastJobDescription);
     try {
-
       const response = await axios.post(
         "https://coverly-production.up.railway.app/generate-cover-letter",
         formData,
@@ -52,11 +63,14 @@ function App() {
           },
         }
       );
-      
 
       if (response.data && response.data.cover_letter) {
         setGeneratedLetters((prev) => [response.data.cover_letter, ...prev]);
         setSelectedIndex(0);
+
+        // Update count after generating
+        const countRes = await axios.get("https://coverly-production.up.railway.app/count");
+        setTotalCount(countRes.data.count);
       }
     } catch (error) {
       console.error("Error regenerating letter:", error);
@@ -70,11 +84,10 @@ function App() {
     const margin = 20;
     let y = margin;
 
-  
     doc.setFont("helvetica", "normal");
     doc.setFontSize(10);
     const lines = doc.splitTextToSize(content, 170);
-  
+
     const pageHeight = doc.internal.pageSize.height;
     lines.forEach((line) => {
       if (y + 7 > pageHeight) {
@@ -84,10 +97,9 @@ function App() {
       doc.text(line, margin, y);
       y += 7;
     });
-  
+
     doc.save("cover_letter.pdf");
   };
-  
 
   const handleRestart = () => {
     setGeneratedLetters([]);
@@ -121,6 +133,9 @@ function App() {
       <div className="main-content">
         <div className="container">
           <h1>Coverly</h1>
+          <h4 style={{ textAlign: "center", color: "#ccc", marginTop: "0.3rem" }}>
+            🚀 Total Cover Letters Generated: {totalCount}
+          </h4>
           <h3>Boost Your Chances to Get The Job, Without Wasting Your Time ☕</h3>
 
           {selectedIndex === null ? (
@@ -138,7 +153,10 @@ function App() {
 
               <div className="button-stack">
                 <div className="top-buttons-row">
-                  <button className="pdf-button" onClick={() => handleSaveToPDF(generatedLetters[selectedIndex])}>
+                  <button
+                    className="pdf-button"
+                    onClick={() => handleSaveToPDF(generatedLetters[selectedIndex])}
+                  >
                     Save as PDF
                   </button>
                   <button className="restart-button" onClick={handleRestart}>
@@ -159,11 +177,9 @@ function App() {
           )}
         </div>
       </div>
-        <div className="page-footer">
-          By AbuDaqaLabs
-        </div>
+      <div className="page-footer">By AbuDaqaLabs</div>
     </div>
   );
 }
 
-export default App;// test change
+export default App;

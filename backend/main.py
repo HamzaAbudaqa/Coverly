@@ -11,11 +11,12 @@ app = FastAPI()
 # Allow frontend connection
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://coverly-seven.vercel.app/"],
+    allow_origins=["https://coverly-seven.vercel.app"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 
 # Setup your OpenAI API key
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')

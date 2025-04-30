@@ -3,6 +3,9 @@ from fastapi.middleware.cors import CORSMiddleware
 from pdfminer.high_level import extract_text
 import openai
 import os
+from dotenv import load_dotenv
+load_dotenv()
+
 
 app = FastAPI()
 

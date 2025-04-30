@@ -16,55 +16,39 @@ body {
   100% { background-position: 0% 50%; }
 }
 
-h1 {
-  font-size: 2.2rem;
-  text-align: center;
-  margin-bottom: 1.2rem;
-  background: linear-gradient(90deg, #ffffff, #ad6df7);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  text-shadow: 1px 1px 6px rgba(0, 0, 0, 0.3);
-}
-
-h3 {
-  text-align: center;
-  margin-bottom: 2rem;
-  font-weight: 500;
-}
-
 /* === Layout === */
 .full-layout {
   display: flex;
   flex-direction: row;
-  gap: 2rem;
   padding: 4rem 2rem;
   align-items: flex-start;
   justify-content: center;
+  gap: 2rem;
   flex-wrap: wrap;
 }
 
 /* === Sidebar === */
 .sidebar {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 2rem 1rem;
+  border-radius: 16px;
+  color: white;
   min-width: 240px;
   max-width: 280px;
   flex-shrink: 0;
-  background: rgba(255, 255, 255, 0.05);
-  padding: 2rem 1.2rem;
-  border-radius: 16px;
+  height: fit-content;
   box-shadow: inset -1px 0 4px rgba(0, 0, 0, 0.2);
-  color: #fff;
 }
 
+/* === Sidebar Items === */
 .sidebar h2 {
   font-size: 1.1rem;
   margin-bottom: 1rem;
 }
-
 .sidebar ul {
   list-style: none;
   padding: 0;
 }
-
 .sidebar li {
   background: rgba(255, 255, 255, 0.07);
   padding: 0.6rem 1rem;
@@ -74,12 +58,10 @@ h3 {
   cursor: pointer;
   transition: background 0.2s ease;
 }
-
 .sidebar li:hover {
   background: rgba(255, 255, 255, 0.15);
   color: #fff;
 }
-
 .sidebar li.active {
   background: #a75aff;
   color: #fff;
@@ -89,9 +71,10 @@ h3 {
 /* === Main Content === */
 .main-content {
   flex: 1;
-  min-width: 300px;
   max-width: 900px;
-  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
 }
 
 /* === Container === */
@@ -106,13 +89,37 @@ h3 {
   margin: 0 auto;
 }
 
+h1 {
+  font-size: 2.2rem;
+  text-align: center;
+  margin-bottom: 0.5rem;
+  background: linear-gradient(90deg, #ffffff, #ad6df7);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+h3 {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+/* === Generated Letter === */
+.generated-letter {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 1.5rem 2rem;
+  border-radius: 16px;
+  color: #e6e6e6;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  overflow-x: hidden;
+}
+
 /* === Form === */
 form {
   display: flex;
   flex-direction: column;
   gap: 1.2rem;
 }
-
 input[type="file"],
 textarea {
   background: rgba(255, 255, 255, 0.05);
@@ -123,16 +130,13 @@ textarea {
   font-size: 1rem;
   transition: border-color 0.3s ease;
 }
-
-textarea::placeholder {
-  color: #999;
-}
-
 input[type="file"]:hover,
 textarea:hover {
   border-color: #8e2de2;
 }
-
+textarea::placeholder {
+  color: #999;
+}
 input[type="file"]::file-selector-button {
   background: #4f28a5;
   border: none;
@@ -144,49 +148,42 @@ input[type="file"]::file-selector-button {
   margin-right: 1rem;
   transition: background 0.3s ease;
 }
-
 input[type="file"]::file-selector-button:hover {
   background: #6b40e9;
 }
 
-/* === Generated Letter === */
-.generated-letter {
-  background: rgba(255, 255, 255, 0.05);
-  padding: 1.5rem 2rem;
-  border-radius: 16px;
-  box-shadow: 0 0 25px rgba(0, 0, 0, 0.2);
-  width: 100%;
-  color: #e6e6e6;
-  font-size: 0.95rem;
-  line-height: 1.5;
-  white-space: pre-wrap;
-  overflow-x: hidden;
+/* === Button Section === */
+.button-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.top-buttons-row {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.bottom-button-row {
+  text-align: center;
 }
 
 /* === Buttons === */
 button {
-  padding: 1rem;
-  font-size: 1.1rem;
+  padding: 0.9rem 1.8rem;
+  font-size: 1rem;
   font-weight: bold;
   color: white;
   background: linear-gradient(135deg, #8e2de2, #4a00e0);
   border: none;
-  border-radius: 12px;
+  border-radius: 10px;
   cursor: pointer;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
-
 button:hover {
   transform: scale(1.03);
   box-shadow: 0 0 20px rgba(142, 45, 226, 0.5);
 }
-
-.pdf-button,
-.restart-button {
-  margin-top: 1rem;
-  margin-right: 1rem;
-}
-
 .restart-button {
   background: linear-gradient(to right, #ff4d4d, #ff6f61);
 }
@@ -202,7 +199,6 @@ button:hover {
   animation: spin 0.9s linear infinite;
   align-self: center;
 }
-
 @keyframes spin {
   to {
     transform: rotate(360deg);
@@ -211,36 +207,26 @@ button:hover {
 
 /* === Footer === */
 .page-footer {
-  text-align: right;
+  text-align: center;
   margin-top: 2rem;
   font-size: 0.85rem;
   font-weight: bold;
   color: rgba(255, 255, 255, 0.5);
 }
 
-/* === Responsive for Mobile === */
+/* === Responsive === */
 @media (max-width: 768px) {
   .full-layout {
     flex-direction: column;
-    align-items: center;
     padding: 2rem 1rem;
   }
-
   .sidebar {
     width: 100%;
-    margin-bottom: 2rem;
     text-align: center;
   }
-
   .main-content {
     width: 100%;
-    padding: 0;
   }
-
-  .container {
-    padding: 1.5rem;
-  }
-
   .generated-letter {
     font-size: 0.85rem;
     padding: 1rem;

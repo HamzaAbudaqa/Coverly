@@ -4,15 +4,18 @@ from pdfminer.high_level import extract_text
 import openai
 import os
 from dotenv import load_dotenv
-load_dotenv()
 
+load_dotenv()
 
 app = FastAPI()
 
-# Allow frontend connection
+# Allow frontend connections from Vercel and localhost
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
+    allow_origins=[
+        "https://coverly-seven.vercel.app",
+        "http://localhost:3000"
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -39,12 +42,12 @@ Requirements:
 - About 250-300 words
 - Mention specific skills that match the job
 - The cover letter must relate the skills used in the resume experience to what is looked for in the job description.
-- It must be professional but not sound Ai generated.
-- If the resume does not have the qualifications, then don't create fake experience, only use whats on the resume.
+- It must be professional but not sound AI generated.
+- If the resume does not have the qualifications, then don't create fake experience, only use what's on the resume.
 - Formal tone but confident.
 """
 
-    client = openai.OpenAI(api_key=OPENAI_API_KEY)  # <----- Pass it here
+    client = openai.OpenAI(api_key=OPENAI_API_KEY)
 
     response = client.chat.completions.create(
         model="gpt-3.5-turbo",
@@ -54,9 +57,9 @@ Requirements:
 
     generated_letter = response.choices[0].message.content
     return {"cover_letter": generated_letter}
+
+# Required for Railway to bind to the right port
 if __name__ == "__main__":
     import uvicorn
-    port = int(os.environ.get("PORT", 8000))  # <- Required for Railway
-    
+    port = int(os.environ.get("PORT", 8080))
     uvicorn.run("main:app", host="0.0.0.0", port=port)
-

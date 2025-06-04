@@ -1,6 +1,7 @@
 from fastapi import FastAPI, UploadFile, Form
 from fastapi.middleware.cors import CORSMiddleware
 from pdfminer.high_level import extract_text
+from io import BytesIO
 import openai
 import os
 from dotenv import load_dotenv
@@ -24,12 +25,21 @@ app.add_middleware(
 # Setup your OpenAI API key
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
 
+@app.get("/health")
+def health():
+    return {"status": "ok"}
+
 @app.post("/generate-cover-letter")
 async def generate_cover_letter(resume: UploadFile, job_description: str = Form(...)):
-    resume_content = await resume.read()
-    resume_text = extract_text(resume.file)
+    try:
+        print("📥 Reading resume file...")
+        resume_content = await resume.read()
 
-    prompt = f"""You are an expert resume writer.
+        print("📄 Extracting resume text...")
+        resume_text = extract_text(BytesIO(resume_content))
+        print("✅ Resume text extracted.")
+
+        prompt = f"""You are an expert resume writer.
 Write a personalized cover letter based on the following resume and job description:
 
 Resume:
@@ -47,16 +57,21 @@ Requirements:
 - Formal tone but confident.
 """
 
-    client = openai.OpenAI(api_key=OPENAI_API_KEY)
+        print("🧠 Calling OpenAI API...")
+        client = openai.OpenAI(api_key=OPENAI_API_KEY)
+        response = client.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=[{"role": "user", "content": prompt}],
+            max_tokens=600,
+        )
 
-    response = client.chat.completions.create(
-        model="gpt-3.5-turbo",
-        messages=[{"role": "user", "content": prompt}],
-        max_tokens=600,
-    )
+        generated_letter = response.choices[0].message.content
+        print("✅ Cover letter generated.")
+        return {"cover_letter": generated_letter}
 
-    generated_letter = response.choices[0].message.content
-    return {"cover_letter": generated_letter}
+    except Exception as e:
+        print("❌ Error in /generate-cover-letter:", str(e))
+        return {"error": str(e)}
 
 # Required for Railway to bind to the right port
 if __name__ == "__main__":

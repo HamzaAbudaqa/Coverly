@@ -10,8 +10,9 @@ function App() {
   const [lastResume, setLastResume] = useState(null);
   const [lastJobDescription, setLastJobDescription] = useState("");
   const [loading, setLoading] = useState(false);
+  const [count, setCount] = useState(null); // <-- NEW
 
-  // Load from localStorage on mount
+  // Load history
   useEffect(() => {
     const saved = localStorage.getItem("coverLetterHistory");
     if (saved) {
@@ -19,12 +20,11 @@ function App() {
     }
   }, []);
 
-  // Save to localStorage on change
   useEffect(() => {
     localStorage.setItem("coverLetterHistory", JSON.stringify(generatedLetters));
   }, [generatedLetters]);
 
-  // 🔁 Ping Railway backend to keep it alive
+  // Keep backend awake
   useEffect(() => {
     const ping = () => {
       fetch("https://coverly-production.up.railway.app/health")
@@ -32,9 +32,17 @@ function App() {
         .catch(() => console.warn("⚠️ Backend ping failed"));
     };
 
-    ping(); // initial ping
-    const interval = setInterval(ping, 5 * 60 * 1000); // every 5 min
-    return () => clearInterval(interval); // cleanup on unmount
+    ping();
+    const interval = setInterval(ping, 5 * 60 * 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  // Fetch total count
+  useEffect(() => {
+    fetch("https://coverly-production.up.railway.app/count")
+      .then((res) => res.json())
+      .then((data) => setCount(data.count))
+      .catch(() => console.warn("⚠️ Could not load count"));
   }, []);
 
   const handleNewLetter = (newLetter, resume = null, jobDescription = "") => {
@@ -43,6 +51,7 @@ function App() {
     if (resume) setLastResume(resume);
     if (jobDescription) setLastJobDescription(jobDescription);
     setLoading(false);
+    setCount((prev) => prev + 1); // optimistically update count
   };
 
   const regenerateLetter = async () => {
@@ -69,6 +78,7 @@ function App() {
       if (response.data && response.data.cover_letter) {
         setGeneratedLetters((prev) => [response.data.cover_letter, ...prev]);
         setSelectedIndex(0);
+        setCount((prev) => prev + 1);
       }
     } catch (error) {
       console.error("Error regenerating letter:", error);
@@ -132,6 +142,9 @@ function App() {
         <div className="container">
           <h1>Coverly</h1>
           <h3>Boost Your Chances to Get The Job, Without Wasting Your Time ☕</h3>
+          {count !== null && (
+            <h4 style={{ marginTop: "10px" }}>🚀 {count} cover letters generated so far</h4>
+          )}
 
           {selectedIndex === null ? (
             <UploadForm

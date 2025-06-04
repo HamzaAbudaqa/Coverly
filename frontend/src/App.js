@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import UploadForm from "./components/UploadForm";
@@ -12,6 +11,7 @@ function App() {
   const [lastJobDescription, setLastJobDescription] = useState("");
   const [loading, setLoading] = useState(false);
 
+  // Load from localStorage on mount
   useEffect(() => {
     const saved = localStorage.getItem("coverLetterHistory");
     if (saved) {
@@ -19,9 +19,23 @@ function App() {
     }
   }, []);
 
+  // Save to localStorage on change
   useEffect(() => {
     localStorage.setItem("coverLetterHistory", JSON.stringify(generatedLetters));
   }, [generatedLetters]);
+
+  // 🔁 Ping Railway backend to keep it alive
+  useEffect(() => {
+    const ping = () => {
+      fetch("https://coverly-production.up.railway.app/health")
+        .then(() => console.log("📡 Pinging backend to keep it awake"))
+        .catch(() => console.warn("⚠️ Backend ping failed"));
+    };
+
+    ping(); // initial ping
+    const interval = setInterval(ping, 5 * 60 * 1000); // every 5 min
+    return () => clearInterval(interval); // cleanup on unmount
+  }, []);
 
   const handleNewLetter = (newLetter, resume = null, jobDescription = "") => {
     setGeneratedLetters((prev) => [newLetter, ...prev]);
@@ -42,7 +56,6 @@ function App() {
     formData.append("resume", lastResume);
     formData.append("job_description", lastJobDescription);
     try {
-
       const response = await axios.post(
         "https://coverly-production.up.railway.app/generate-cover-letter",
         formData,
@@ -52,7 +65,6 @@ function App() {
           },
         }
       );
-      
 
       if (response.data && response.data.cover_letter) {
         setGeneratedLetters((prev) => [response.data.cover_letter, ...prev]);
@@ -70,11 +82,10 @@ function App() {
     const margin = 20;
     let y = margin;
 
-  
     doc.setFont("helvetica", "normal");
     doc.setFontSize(10);
     const lines = doc.splitTextToSize(content, 170);
-  
+
     const pageHeight = doc.internal.pageSize.height;
     lines.forEach((line) => {
       if (y + 7 > pageHeight) {
@@ -84,10 +95,9 @@ function App() {
       doc.text(line, margin, y);
       y += 7;
     });
-  
+
     doc.save("cover_letter.pdf");
   };
-  
 
   const handleRestart = () => {
     setGeneratedLetters([]);
@@ -159,11 +169,9 @@ function App() {
           )}
         </div>
       </div>
-        <div className="page-footer">
-          By AbuDaqaLabs
-        </div>
+      <div className="page-footer">By AbuDaqaLabs</div>
     </div>
   );
 }
 
-export default App;// test change
+export default App;

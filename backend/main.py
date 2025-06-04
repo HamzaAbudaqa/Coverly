@@ -40,22 +40,22 @@ async def generate_cover_letter(resume: UploadFile, job_description: str = Form(
         print("✅ Resume text extracted.")
 
         prompt = f"""You are an expert resume writer.
-Write a personalized cover letter based on the following resume and job description:
+        Write a personalized cover letter based on the following resume and job description:
 
-Resume:
-{resume_text}
+        Resume:
+        {resume_text}
 
-Job Description:
-{job_description}
+        Job Description:
+        {job_description}
 
-Requirements:
-- About 250-300 words
-- Mention specific skills that match the job
-- The cover letter must relate the skills used in the resume experience to what is looked for in the job description.
-- It must be professional but not sound AI generated.
-- If the resume does not have the qualifications, then don't create fake experience, only use what's on the resume.
-- Formal tone but confident.
-"""
+        Requirements:
+        - About 250-300 words
+        - Mention specific skills that match the job
+        - The cover letter must relate the skills used in the resume experience to what is looked for in the job description.
+        - It must be professional but not sound AI generated.
+        - If the resume does not have the qualifications, then don't create fake experience, only use what's on the resume.
+        - Formal tone but confident.
+        """
 
         print("🧠 Calling OpenAI API...")
         client = openai.OpenAI(api_key=OPENAI_API_KEY)

@@ -1,6 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import TemplateForm from "./pages/TemplateForm"; // your new form page
+import HomePage from "./pages/Homepage";
 import "./App.css";
 
 function App() {
@@ -11,6 +12,7 @@ function App() {
           <div className="container">
             <Routes>
               <Route path="/template" element={<TemplateForm />} />
+              <Route path="/" element={<HomePage/>}/>
             </Routes>
           </div>
         </div>

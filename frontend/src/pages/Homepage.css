@@ -1,12 +1,15 @@
 .homepage {
   height: 100vh;
   width: 100vw;
-  background: linear-gradient(135deg, #1e0e3e, #6b31c1, #ff6bcb);
-  background-size: 300% 300%;
-  animation: shift 12s ease infinite;
+  background: linear-gradient(120deg, #feda75, #fa7e1e, #d62976, #962fbf, #4f5bd5);
+  background-size: 400% 400%;
+  animation: shift 15s ease infinite;
   display: flex;
   align-items: center;
   justify-content: center;
+  font-family: 'Inter', sans-serif;
+  padding: 2rem;
+  box-sizing: border-box;
 }
 
 @keyframes shift {
@@ -19,45 +22,46 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 90%;
+  width: 100%;
   max-width: 1200px;
   gap: 4rem;
 }
 
 .hero-text {
-  color: white;
   flex: 1;
+  color: white;
 }
 
 .hero-text h1 {
-  font-size: 3rem;
+  font-size: 3.2rem;
   margin-bottom: 1rem;
   line-height: 1.2;
   color: white;
 }
 
 .hero-text h1 span {
-  background: linear-gradient(90deg, #ffffff, #ad6df7);
+  background: linear-gradient(90deg, #ffffff, #ffe29f);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
 .hero-text p {
-  font-size: 1.2rem;
+  font-size: 1.25rem;
+  color: #f2f2f2;
   margin-bottom: 2rem;
-  color: #eaeaea;
+  max-width: 500px;
 }
 
 .cta-button {
-  background: linear-gradient(to right, #a75aff, #7a34e0);
-  color: white;
+  background: white;
+  color: #000;
   padding: 0.9rem 2rem;
   font-size: 1rem;
   font-weight: bold;
   border: none;
   border-radius: 12px;
   cursor: pointer;
-  box-shadow: 0 5px 15px rgba(167, 90, 255, 0.4);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
   transition: transform 0.2s ease;
 }
 
@@ -82,22 +86,27 @@
 
 .mockup-card h3 {
   margin-bottom: 0.8rem;
-  font-size: 1rem;
-  color: #333;
+  font-size: 1.1rem;
+  color: #222;
 }
 
 .mockup-card p {
-  font-size: 0.9rem;
-  color: #555;
+  font-size: 0.95rem;
+  color: #444;
   margin-bottom: 1rem;
 }
 
 .mock-button {
-  padding: 0.6rem 1rem;
-  background-color: #6c63ff;
+  padding: 0.6rem 1.2rem;
+  background-color: #ff2d75;
   color: white;
   font-weight: bold;
   border: none;
-  border-radius: 8px;
+  border-radius: 10px;
   cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.mock-button:hover {
+  background-color: #e6005c;
 }

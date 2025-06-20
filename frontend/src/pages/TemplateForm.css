@@ -1,0 +1,121 @@
+/* Centered fullscreen background */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Inter', sans-serif;
+  background: linear-gradient(135deg, #1e0e3e, #3e1a74, #6b31c1);
+  background-size: 200% 200%;
+  animation: gradientShift 12s ease infinite;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  overflow: hidden;
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 75%; }
+  50% { background-position: 100% 75%; }
+  100% { background-position: 0% 75%; }
+}
+
+/* Main container fits the viewport height */
+.template-form-container {
+  width: 1050px;
+  max-width: 1400px;
+  height: 90vh;
+  padding: 1.5rem 2rem;
+  border-radius: 20px;
+  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(20px);
+  color: #eaeaea;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* Title */
+.template-form-container h2 {
+  font-size: 1.6rem;
+  text-align: center;
+  margin-bottom: 0.8rem;
+  background: linear-gradient(90deg, #ffffff, #ad6df7);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Top 4 fields as 2x2 grid */
+.two-column-group {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.8rem;
+}
+
+.two-column-group input {
+  width: 100%;
+  padding: 0.6rem 1rem;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 14px;
+  font-size: 0.9rem;
+  color: #e0e0e0;
+  transition: border-color 0.3s ease;
+  box-sizing: border-box;
+}
+
+/* Rest of form */
+.template-form-container form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+
+/* Textareas */
+.template-form-container textarea {
+  width: 100%;
+  min-height: 55px;
+  max-height: 90px;
+  padding: 0.9rem 0.6rem;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 14px;
+  font-size: 0.9rem;
+  color: #e0e0e0;
+  resize: vertical;
+  transition: border-color 0.3s ease;
+}
+
+/* Submit button */
+.template-form-container button {
+  padding: 0.8rem;
+  font-size: 1rem;
+  font-weight: bold;
+  color: white;
+  background: linear-gradient(135deg, #8e2de2, #4a00e0);
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  margin-top: 0.5rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  width: 100%;
+}
+
+.template-form-container button:hover {
+  transform: scale(1.02);
+  box-shadow: 0 0 15px rgba(142, 45, 226, 0.4);
+}
+
+/* Optional mobile stack */
+@media (max-width: 768px) {
+  .two-column-group {
+    grid-template-columns: 1fr;
+  }
+
+  .template-form-container {
+    height: auto;
+    padding: 1rem;
+  }
+}

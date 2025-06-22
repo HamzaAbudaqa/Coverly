@@ -10,6 +10,7 @@
   font-family: 'Inter', sans-serif;
   padding: 2rem;
   box-sizing: border-box;
+  position: relative;
 }
 
 @keyframes shift {
@@ -25,11 +26,21 @@
   width: 100%;
   max-width: 1200px;
   gap: 4rem;
+  position: relative;
+}
+
+.hero-logo {
+  position: absolute;
+  top: -80px;
+  left: 0;
+  height: 60px;
+  width: auto;
 }
 
 .hero-text {
   flex: 1;
   color: white;
+  position: relative;
 }
 
 .hero-text h1 {
@@ -82,6 +93,10 @@
   width: 100%;
   max-width: 360px;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 280px;
 }
 
 .mockup-card h3 {
@@ -93,20 +108,38 @@
 .mockup-card p {
   font-size: 0.95rem;
   color: #444;
-  margin-bottom: 1rem;
+  margin-bottom: 2.5rem; /* increased space above the button */
 }
 
 .mock-button {
-  padding: 0.6rem 1.2rem;
-  background-color: #ff2d75;
+  padding: 0.8rem 1.5rem;
+  background: linear-gradient(to right, #a626d3, #d61d8d);
   color: white;
   font-weight: bold;
   border: none;
-  border-radius: 10px;
+  border-radius: 12px;
   cursor: pointer;
   transition: background 0.2s ease;
+  margin-top: auto;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);
 }
 
 .mock-button:hover {
-  background-color: #e6005c;
+  filter: brightness(1.1);
 }
+.hero-logo {
+  height: 400px;
+  width: auto;
+  margin-bottom: 1rem;
+  filter: drop-shadow(0 4px 10px rgba(0,0,0,0.15));
+  animation: float 4s ease-in-out infinite;
+  align-self: flex-start;
+  margin-left:-35%;
+  margin-top: -60%;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+

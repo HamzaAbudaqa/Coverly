@@ -1,7 +1,9 @@
 import React from 'react';
 import './Homepage.css';
+import {useNavigate} from 'react-router-dom';
 
 function HomePage() {
+  const navigate = useNavigate();
   return (
     <div className="homepage">
       <div className="hero">
@@ -16,7 +18,7 @@ function HomePage() {
           <div className="mockup-card">
             <h3>Profile Template</h3>
             <p>Fill out your application template once an application cycle and never think about it again</p>
-            <button className="mock-button">Let's Get Filling</button>
+            <button onClick={() => navigate('/template')} className="mock-button">Let's Get Filling</button>
           </div>
         </div>
       </div>

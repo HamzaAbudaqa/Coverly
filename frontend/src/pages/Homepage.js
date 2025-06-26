@@ -11,7 +11,7 @@ function HomePage() {
           <img src="/cctrans.png" alt="Coverly Logo" className="hero-logo" />
           <h1><span>Simplify Job Applications</span><br /> With Coverly</h1>
           <p>Coverly writes cover letters and applies to jobs for you. Save time. Land interviews. It’s that simple.</p>
-          <button className="cta-button">Try Coverly</button>
+          <button className="cta-button" onClick={() => navigate('/signup')}>Try Coverly</button>
         </div>
 
         <div className="hero-preview">

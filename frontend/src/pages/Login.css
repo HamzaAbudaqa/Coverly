@@ -1,0 +1,146 @@
+/* Reset and base styles */
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: 'Segoe UI', sans-serif;
+  overflow: hidden;
+}
+
+/* Wrapper for page layout */
+.login-wrapper {
+  position: relative;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+}
+
+/* Background carousel image */
+.background-carousel {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;
+}
+
+.bg-img {
+  width: 100%;
+  height: 100vh;
+  object-fit: cover;
+}
+
+/* Form container */
+.auth-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(15, 23, 42, 0.6); /* dark translucent glassy box */
+  padding: 40px;
+  border-radius: 16px;
+  z-index: 2;
+  width: 400px;
+  color: white;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(6px);
+}
+
+/* Headings */
+.auth-container h1 {
+  margin-bottom: 10px;
+  font-size: 28px;
+}
+
+.auth-container p {
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+
+.login-link a {
+  color: #d7de16; /* Custom yellow-green accent */
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.login-link a:hover {
+  text-decoration: underline;
+}
+
+/* Form layout */
+.auth-container form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.name-group {
+  display: flex;
+  gap: 10px;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  outline: none;
+  width: 100%;
+}
+
+/* Terms checkbox */
+.checkbox {
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+/* Submit button */
+button[type="submit"] {
+  background: linear-gradient(to right, #c21281, #dd8a0d); /* Coverly accent */
+  border: none;
+  border-radius: 8px;
+  padding: 12px;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 8px;
+}
+
+/* Divider text */
+.divider {
+  text-align: center;
+  font-size: 12px;
+  margin-top: 16px;
+  color: #ccc;
+}
+
+/* Social login buttons */
+.social-buttons {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.social-buttons button {
+  flex: 1;
+  border: none;
+  padding: 10px;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.social-buttons .google {
+  background: white;
+  color: black;
+}
+
+.social-buttons .apple {
+  background: black;
+  color: white;
+}

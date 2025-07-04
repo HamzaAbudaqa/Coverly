@@ -28,7 +28,7 @@ function TemplateForm() {
     e.preventDefault();
 
     try {
-      const res = await fetch('http://localhost:8000/template', {
+      const res = await fetch('http://localhost:3002/template', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ user_id: 'test-user', ...formData }),

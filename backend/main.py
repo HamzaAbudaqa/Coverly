@@ -6,11 +6,15 @@ import openai
 import os
 from dotenv import load_dotenv
 from typing import List, Dict
-
-
-
+import psycopg2
+from fastapi import HTTPException
+from openai import OpenAI
+import json
 
 load_dotenv()
+
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+
 
 app = FastAPI()
 
@@ -129,7 +133,8 @@ def get_template(user_id: str):
 @app.post("/autofill-plan")
 async def autofill_plan(payload: AutofillPayload):
     try:
-        # Format message for GPT-4
+        client = OpenAI()
+
         messages = [
             {
                 "role": "system",
@@ -145,23 +150,18 @@ async def autofill_plan(payload: AutofillPayload):
             }
         ]
 
-        # Send to GPT-4
-        response = openai.ChatCompletion.create(
+        response = client.chat.completions.create(
             model="gpt-4",
             messages=messages,
             temperature=0.3
         )
 
-        reply = response["choices"][0]["message"]["content"].strip()
-
-        # Safely evaluate GPT response
-        mapping = eval(reply) if reply.startswith("{") else {}
-
-        if not isinstance(mapping, dict):
-            raise ValueError("Invalid response format")
+        reply = response.choices[0].message.content.strip()
+        mapping = json.loads(reply)
 
         return mapping
 
     except Exception as e:
         print("❌ Error in /autofill-plan:", e)
         raise HTTPException(status_code=500, detail=str(e))
+

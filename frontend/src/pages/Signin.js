@@ -5,9 +5,10 @@ import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
 
 const backgroundImages = [
-  '/images/coverly-logo.png',
-  '/images/coverly-logo.png'
+  '/coverly-logo.png',
+  '/coverly-logo.png'
 ];
+
 
 function SignupPage() {
   const [index, setIndex] = useState(0);

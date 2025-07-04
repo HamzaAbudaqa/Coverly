@@ -8,9 +8,10 @@ import {
 import { useNavigate } from 'react-router-dom';
 
 const backgroundImages = [
-  '/images/coverly-logo.png',
-  '/images/coverly-logo.png'
+  '/coverly-logo.png',
+  '/coverly-logo.png'
 ];
+
 
 function LoginPage() {
   const [index, setIndex] = useState(0);
@@ -56,33 +57,35 @@ function LoginPage() {
   };
 
   return (
-    <div className="login-wrapper">
-      <div className="background-carousel">
-        <img className="bg-img" src={backgroundImages[index]} alt="Background Slide" />
-      </div>
-
-      <div className="auth-container">
-        <h1>Log in</h1>
-        <p className="login-link">
-          Don’t have an account? <a href="/signup">Create one</a>
-        </p>
-
-        <form onSubmit={handleLogin}>
-          <input type="email" placeholder="Email" required />
-          <input type="password" placeholder="Password" required />
-
-          <button type="submit">Log In</button>
-
-          <div className="divider"><span>or log in with</span></div>
-
-          <div className="social-buttons">
-            <button type="button" className="google" onClick={handleGoogleLogin}>Google</button>
-            <button type="button" className="apple" disabled>Apple</button>
-          </div>
-        </form>
-      </div>
+  <div className="login-wrapper">
+    <div className="background-carousel">
+      <img className="bg-img" src={backgroundImages[index]} alt="Background Slide" />
     </div>
-  );
+
+    <div className="auth-container">
+      <h1>Log in</h1>
+      <p className="login-link">
+        Don’t have an account? <a href="/signup">Create one</a>
+      </p>
+
+      <form onSubmit={handleLogin}>
+        <input type="email" placeholder="Email" required />
+        <input type="password" placeholder="Password" required />
+
+        <button type="submit">Log In</button>
+
+        <div className="divider"><span>or log in with</span></div>
+
+        <div className="social-buttons">
+          <button type="button" className="google" onClick={handleGoogleLogin}>Google</button>
+          <button type="button" className="apple" disabled>Apple</button>
+        </div>
+      </form>
+    </div>
+  </div>
+);
+
+
 }
 
 export default LoginPage;

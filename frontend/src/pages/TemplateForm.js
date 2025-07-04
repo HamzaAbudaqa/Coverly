@@ -1,3 +1,4 @@
+/* global chrome */
 import React, { useState } from 'react';
 import './TemplateForm.css';
 import { useNavigate } from 'react-router-dom';
@@ -29,25 +30,26 @@ function TemplateForm() {
     try {
       const res = await fetch('http://localhost:8000/template', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          user_id: 'test-user',
-          ...formData,
-        }),
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ user_id: 'test-user', ...formData }),
       });
 
-      if (!res.ok) {
-        throw new Error('Failed to save template');
-      }
+      if (!res.ok) throw new Error('Failed to save template');
 
       const result = await res.json();
       console.log(result);
       alert('Template saved successfully!');
-      navigate('/'); // Redirect after saving
+      navigate('/');
+
+      // ✅ Instead of using chrome.runtime, use window.postMessage to send to extension
+      window.postMessage({
+        source: "coverly-template",
+        type: "SAVE_TEMPLATE",
+        payload: formData,
+      }, "*");
+
     } catch (error) {
-      console.error('Error saving template:', error);
+      console.error('❌ Error saving template:', error);
       alert('Something went wrong. Try again.');
     }
   };

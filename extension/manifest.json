@@ -1,0 +1,38 @@
+{
+  "manifest_version": 3,
+  "name": "Coverly Autofill",
+  "version": "1.0",
+  "description": "Autofill career websites with template data.",
+  "permissions": [
+    "storage",
+    "scripting",
+    "tabs",
+    "activeTab",
+    "commands"
+  ],
+  "host_permissions": ["<all_urls>"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"]
+    }
+  ],
+  "commands": {
+    "take-control": {
+      "suggested_key": {
+        "default": "Ctrl+L"
+      },
+      "description": "Trigger autofill flow"
+    }
+  },
+  "action": {
+    "default_icon": {
+      "16": "assets/icon16.png",
+      "48": "assets/icon48.png",
+      "128": "assets/icon128.png"
+    }
+  }
+}

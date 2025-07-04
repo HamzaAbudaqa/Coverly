@@ -1,10 +1,14 @@
-# main.py
-from fastapi import FastAPI, HTTPException, Request
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-import psycopg2
+from typing import List
+import openai
 import os
 from dotenv import load_dotenv
+from typing import List, Dict
+
+
+
 
 load_dotenv()
 
@@ -17,6 +21,17 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+class DOMField(BaseModel):
+    id: str
+    label: str
+    placeholder: str
+    name: str
+    classList: List[str]
+
+class AutofillPayload(BaseModel):
+    instruction: str
+    dom_snapshot: List[DOMField]
+    user_data: Dict[str, str]
 
 DB_HOST = os.getenv("DB_HOST")
 DB_NAME = os.getenv("DB_NAME")
@@ -110,4 +125,43 @@ def get_template(user_id: str):
             "pastProjects": row[8],
         }
     except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+@app.post("/autofill-plan")
+async def autofill_plan(payload: AutofillPayload):
+    try:
+        # Format message for GPT-4
+        messages = [
+            {
+                "role": "system",
+                "content": (
+                    "You are an assistant that maps user data to a web form. "
+                    "Given a DOM snapshot and user data, return a JSON object mapping input IDs (with '#' prefix) to appropriate values. "
+                    "Only return the JSON object and nothing else."
+                ),
+            },
+            {
+                "role": "user",
+                "content": f"Instruction: {payload.instruction}\n\nDOM: {payload.dom_snapshot}\n\nUser data: {payload.user_data}"
+            }
+        ]
+
+        # Send to GPT-4
+        response = openai.ChatCompletion.create(
+            model="gpt-4",
+            messages=messages,
+            temperature=0.3
+        )
+
+        reply = response["choices"][0]["message"]["content"].strip()
+
+        # Safely evaluate GPT response
+        mapping = eval(reply) if reply.startswith("{") else {}
+
+        if not isinstance(mapping, dict):
+            raise ValueError("Invalid response format")
+
+        return mapping
+
+    except Exception as e:
+        print("❌ Error in /autofill-plan:", e)
         raise HTTPException(status_code=500, detail=str(e))

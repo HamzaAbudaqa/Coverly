@@ -1,5 +1,3 @@
-// content.js
-
 // Normalize text by removing non-alphabetical characters and lowercasing
 function normalize(text) {
   return text?.toLowerCase().replace(/[^a-z]/g, "") || "";
@@ -20,13 +18,25 @@ function extractDomSnapshot() {
   });
 }
 
-// Apply the mapping from GPT to DOM
+// Apply the mapping from GPT to DOM safely
 function applyAutofillMapping(mapping) {
   for (const [selector, value] of Object.entries(mapping)) {
-    const input = document.querySelector(selector);
-    if (input) {
-      input.value = value;
-      input.dispatchEvent(new Event("input", { bubbles: true }));
+    try {
+      // Validate: must be a proper ID selector
+      if (!/^#[a-zA-Z_][\w-]*$/.test(selector)) {
+        console.warn(`⚠️ Skipping invalid selector: ${selector}`);
+        continue;
+      }
+
+      const input = document.querySelector(selector);
+      if (input) {
+        input.value = value;
+        input.dispatchEvent(new Event("input", { bubbles: true }));
+      } else {
+        console.warn(`⚠️ Element not found for selector: ${selector}`);
+      }
+    } catch (err) {
+      console.error(`❌ Error applying selector ${selector}:`, err);
     }
   }
 }

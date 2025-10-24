@@ -164,6 +164,7 @@
 }
 
 /* Next button */
+/* Next button */
 .next-button {
   background: linear-gradient(to right, #a626d3, #d61d8d);
   color: white;
@@ -180,6 +181,14 @@
 .next-button:hover {
   transform: translateY(-1px);
   box-shadow: 0 6px 24px rgba(214, 29, 141, 0.5);
+}
+
+/* ⛔ Disabled state */
+.next-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
 }
 
 /* Experience blocks */

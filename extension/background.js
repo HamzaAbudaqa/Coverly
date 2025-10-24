@@ -1,58 +1,46 @@
-// background.js
+// background.js (MV3)
 
-// Listen for command shortcuts defined in manifest.json
+// 1) Keyboard command → ask user → dispatch page event via injected script
 chrome.commands.onCommand.addListener((command) => {
-  // Check if the command matches our custom "take-control"
-  if (command === "take-control") {
-    // Get the active tab in the current window
-    chrome.tabs.query({ active: true, currentWindow: true }, ([tab]) => {
-      // Dynamically inject and execute a script into the active tab
-      chrome.scripting.executeScript({
-        target: { tabId: tab.id },
-        func: () => {
-          // Ask the user for permission to take control
-          const shouldTakeControl = confirm("Should I take control?");
-          
-          // If user says "OK", dispatch a custom event on the page
-          if (shouldTakeControl) {
-            window.dispatchEvent(new CustomEvent("coverly-take-control"));
-          }
-        },
-      });
+  if (command !== "take-control") return;
+
+  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    const tab = tabs?.[0];
+    if (!tab?.id) {
+      console.warn("No active tab to take control of.");
+      return;
+    }
+
+    chrome.scripting.executeScript({
+      target: { tabId: tab.id },
+      func: () => {
+        const ok = confirm("Should I take control?");
+        if (ok) {
+          // Content script listens for this:
+          window.dispatchEvent(new CustomEvent("coverly-take-control"));
+        }
+      },
     });
-  }
+  });
 });
 
-
+// 2) Single onMessage handler for all actions
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  if (message.action === 'saveFormData') {
-    chrome.storage.local.set({ formData: message.data }, () => {
-      console.log("📦 Stored formData from React app:", message.data);
-      sendResponse({ success: true });
-    });
+  if (!message?.action) return;
 
-    // Required to return response asynchronously
-    return true;
-  }
-});
-
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  if (message.action === 'saveFormData') {
+  if (message.action === "saveFormData") {
     console.log("📨 Received form data:", message.data);
 
-    chrome.storage.local.set({ formData: message.data }, () => {
+    chrome.storage.local.set({ formData: message.data, formDataSavedAt: Date.now() }, () => {
       console.log("📦 Saved formData to chrome.storage.local");
-
-      // Debug print after saving
-      chrome.storage.local.get("formData", (result) => {
-        console.log("📂 Stored value is now:", result.formData);
+      // Debug read-back
+      chrome.storage.local.get(["formData", "formDataSavedAt"], (result) => {
+        console.log("📂 Stored value is now:", result.formData, " (savedAt:", new Date(result.formDataSavedAt).toLocaleString(), ")");
       });
-
       sendResponse({ success: true });
     });
-
-    return true;
+    return true; // keep sendResponse alive (async)
   }
+
+  // (optional) add more actions here later...
 });
-
-

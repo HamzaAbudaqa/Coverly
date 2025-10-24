@@ -7,8 +7,7 @@
     "storage",
     "scripting",
     "tabs",
-    "activeTab",
-    "commands"
+    "activeTab"
   ],
   "host_permissions": ["<all_urls>"],
   "background": {

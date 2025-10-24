@@ -21,7 +21,6 @@ export default function TemplateForm() {
     { company: '', location: '', dates: '', description: '' }
   ]);
   const navigate = useNavigate();
-
   const current = questions[step];
 
   const handleChange = (e) => {
@@ -30,13 +29,6 @@ export default function TemplateForm() {
       ...prev,
       [name]: current.type === 'file' ? files[0] : value,
     }));
-  };
-
-  const handleContinue = (e) => {
-    if (e.key === 'Enter' || e.type === 'click') {
-      if (!formData[current.name]) return;
-      setStep((prev) => prev + 1);
-    }
   };
 
   const handleExpChange = (index, field, value) => {
@@ -52,6 +44,43 @@ export default function TemplateForm() {
   const continueWithExperience = () => {
     setFormData((prev) => ({ ...prev, pastWorkExperience: experienceEntries }));
     setStep((prev) => prev + 1);
+  };
+
+  /**  FINAL STEP: Send data to the Chrome extension **/
+  const finalizeAndSave = () => {
+    const payload = {
+      ...formData,
+      pastWorkExperience: experienceEntries,
+    };
+
+    // Convert file metadata only (Chrome storage can't hold File objects)
+    if (payload.resume instanceof File) {
+      payload.resumeFileName = payload.resume.name;
+      payload.resumeFileType = payload.resume.type;
+      delete payload.resume;
+    }
+
+    // Post message to content script
+    window.postMessage(
+      { source: 'coverly-template', payload },
+      '*'
+    );
+
+    console.log('📤 Template data posted to extension:', payload);
+  };
+
+  const handleContinue = (e) => {
+    if (e.key === 'Enter' || e.type === 'click') {
+      if (!formData[current.name] && current.type !== 'experience' && current.type !== 'file') return;
+
+      const nextStep = step + 1;
+      setStep(nextStep);
+
+      // When user reaches the end of the form
+      if (nextStep >= questions.length) {
+        finalizeAndSave();
+      }
+    }
   };
 
   return (
@@ -78,7 +107,13 @@ export default function TemplateForm() {
                 onChange={handleChange}
                 className="hidden-input"
               />
-              <button onClick={handleContinue} className="next-button">Next →</button>
+              <button
+                onClick={handleContinue}
+                className="next-button"
+                disabled={!formData[current.name]} // Prevent skipping
+              >
+                Next →
+              </button>
             </>
           ) : current.type === 'experience' ? (
             <>
@@ -131,7 +166,13 @@ export default function TemplateForm() {
         <div className="form-card-animated done-screen">
           <h2>✅ Your info was updated.</h2>
           <p className="done-subtext">You can now autofill job applications with Coverly.</p>
-          <button onClick={() => navigate('/account-info')} className="edit-button">
+          <button
+            onClick={() => {
+              finalizeAndSave();
+              navigate('/account-info');
+            }}
+            className="edit-button"
+          >
             ✏️ Edit Info
           </button>
         </div>

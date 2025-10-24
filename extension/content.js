@@ -1,3 +1,4 @@
+//content.js
 // Normalize text by removing non-alphabetical characters and lowercasing
 function normalize(text) {
   return text?.toLowerCase().replace(/[^a-z]/g, "") || "";

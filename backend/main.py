@@ -1,23 +1,19 @@
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, HTTPException, Body
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-from typing import List
-import openai
+from typing import List, Dict, Any
 import os
-from dotenv import load_dotenv
-from typing import List, Dict
-import psycopg2
-from fastapi import HTTPException
-from openai import OpenAI
 import json
+from dotenv import load_dotenv
+from openai import OpenAI
+import psycopg2
 
 load_dotenv()
 
+# --- OpenAI client (once) ---
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
-
 app = FastAPI()
-
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -25,6 +21,8 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# ---------- Models ----------
 class DOMField(BaseModel):
     id: str
     label: str
@@ -35,14 +33,14 @@ class DOMField(BaseModel):
 class AutofillPayload(BaseModel):
     instruction: str
     dom_snapshot: List[DOMField]
-    user_data: Dict[str, str]
+    user_data: Dict[str, Any]   # <— accept nested data (arrays/objects)
 
+# ---------- (Your DB config + /template endpoints unchanged) ----------
 DB_HOST = os.getenv("DB_HOST")
 DB_NAME = os.getenv("DB_NAME")
 DB_USER = os.getenv("DB_USER")
 DB_PASS = os.getenv("DB_PASS")
 
-# Pydantic model for request body
 class TemplateData(BaseModel):
     user_id: str
     fullName: str
@@ -54,18 +52,11 @@ class TemplateData(BaseModel):
     skills: str
     pastProjects: str
 
-
 @app.post("/template")
 def save_template(data: TemplateData):
     try:
-        conn = psycopg2.connect(
-            host=DB_HOST,
-            dbname=DB_NAME,
-            user=DB_USER,
-            password=DB_PASS
-        )
+        conn = psycopg2.connect(host=DB_HOST, dbname=DB_NAME, user=DB_USER, password=DB_PASS)
         cur = conn.cursor()
-
         cur.execute("""
             INSERT INTO templates (user_id, full_name, address, phone_number, email, resume, experience, skills, projects)
             VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
@@ -78,45 +69,26 @@ def save_template(data: TemplateData):
                 experience = EXCLUDED.experience,
                 skills = EXCLUDED.skills,
                 projects = EXCLUDED.projects;
-        """,
-        (
-            data.user_id,
-            data.fullName,
-            data.address,
-            data.phoneNumber,
-            data.email,
-            data.resume,
-            data.pastWorkExperience,
-            data.skills,
-            data.pastProjects
+        """, (
+            data.user_id, data.fullName, data.address, data.phoneNumber, data.email,
+            data.resume, data.pastWorkExperience, data.skills, data.pastProjects
         ))
-
         conn.commit()
-        cur.close()
-        conn.close()
+        cur.close(); conn.close()
         return {"message": "Template saved successfully"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-
 @app.get("/template/{user_id}")
 def get_template(user_id: str):
     try:
-        conn = psycopg2.connect(
-            host=DB_HOST,
-            dbname=DB_NAME,
-            user=DB_USER,
-            password=DB_PASS
-        )
+        conn = psycopg2.connect(host=DB_HOST, dbname=DB_NAME, user=DB_USER, password=DB_PASS)
         cur = conn.cursor()
         cur.execute("SELECT * FROM templates WHERE user_id = %s", (user_id,))
         row = cur.fetchone()
-        cur.close()
-        conn.close()
-
+        cur.close(); conn.close()
         if not row:
             raise HTTPException(status_code=404, detail="Template not found")
-
         return {
             "user_id": row[0],
             "fullName": row[1],
@@ -130,38 +102,66 @@ def get_template(user_id: str):
         }
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
-@app.post("/autofill-plan")
-async def autofill_plan(payload: AutofillPayload):
-    try:
-        client = OpenAI()
 
+# ---------- Autofill planner ----------
+@app.post("/autofill-plan")
+async def autofill_plan(payload: AutofillPayload) -> Dict[str, Any]:
+    """
+    Accepts DOM snapshot + user_data and returns a mapping:
+      { "#inputId": "value", ... }
+    """
+    try:
         messages = [
             {
                 "role": "system",
                 "content": (
-                    "You are an assistant that maps user data to a web form. "
-                    "Given a DOM snapshot and user data, return a JSON object mapping input IDs (with '#' prefix) to appropriate values. "
-                    "Only return the JSON object and nothing else."
+                    "You map user data to form fields. "
+                    "Given DOM snapshot + user data, return ONLY a JSON object "
+                    "where each key is an input ID prefixed with '#', and each value is the autofill value."
                 ),
             },
             {
                 "role": "user",
-                "content": f"Instruction: {payload.instruction}\n\nDOM: {payload.dom_snapshot}\n\nUser data: {payload.user_data}"
-            }
+                "content": (
+                    f"Instruction: {payload.instruction}\n\n"
+                    f"DOM: {payload.dom_snapshot}\n\n"
+                    f"User data: {payload.user_data}"
+                ),
+            },
         ]
 
-        response = client.chat.completions.create(
-            model="gpt-4",
+        resp = client.chat.completions.create(
+            model="gpt-4o-mini",  # or "gpt-4", depending on your access
             messages=messages,
-            temperature=0.3
+            temperature=0.2,
         )
 
-        reply = response.choices[0].message.content.strip()
-        mapping = json.loads(reply)
+        reply = resp.choices[0].message.content.strip()
+
+        # Handle code fences or non-pure JSON
+        if reply.startswith("```"):
+            reply = reply.strip("`")
+            # remove possible language hint like ```json
+            if "\n" in reply:
+                reply = reply.split("\n", 1)[1]
+
+        try:
+            mapping = json.loads(reply)
+        except Exception:
+            # fallback: try to find {...} substring
+            start = reply.find("{"); end = reply.rfind("}")
+            if start != -1 and end != -1 and end > start:
+                mapping = json.loads(reply[start:end+1])
+            else:
+                raise
+
+        # Sanitize: only #id keys
+        if not isinstance(mapping, dict):
+            raise ValueError("Planner returned non-object JSON")
+        mapping = {k: v for k, v in mapping.items() if isinstance(k, str) and k.startswith("#")}
 
         return mapping
 
     except Exception as e:
         print("❌ Error in /autofill-plan:", e)
         raise HTTPException(status_code=500, detail=str(e))
-

@@ -6,9 +6,23 @@ frontend/build/
 backend/venv/
 backend/__pycache__/
 
+
 # VSCode
 .vscode/
 
 # Environment variables
 *.env
 
+# Node
+node_modules/
+
+# Python
+venv/
+__pycache__/
+
+# macOS
+.DS_Store
+
+# Build
+dist/
+build/
